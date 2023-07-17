@@ -14,8 +14,7 @@ class DasIndexerService
                     json: {
                       "type": "blockchain",
                       "key_info": {
-                        "coin_type": "",
-                        "chain_id": "1",
+                        "coin_type": "60",
                         "key": "0x#{manager_addr}"
                       }
                     })
