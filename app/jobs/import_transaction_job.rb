@@ -109,6 +109,7 @@ class ImportTransactionJob < ApplicationJob
         capacity: output.capacity,
         occupied_capacity: cell.calculate_min_capacity,
         status: "pending",
+        cell_type: CkbUtils.cell_type(cell.type_script, output_data),
       )
       puts "output cell created tx_hash: #{tx_hash}, index: #{index}, cell_id: #{cell.id}"
 
