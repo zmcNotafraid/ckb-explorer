@@ -21,7 +21,7 @@ class TokenCollectionTagWorker
       ["suspicious"]
     elsif out_of_length?(token_collection.name)
       ["out-of-length-range"]
-    elsif single_use_lock?(udt.issuer_address)
+    elsif single_use_lock?(token_collection.creator.address_hash)
       ["supply-limited"]
     elsif rgbpp_lock?(token_collection.creator.address_hash)
       ["rgb++", "layer-1-asset"]
@@ -35,7 +35,7 @@ class TokenCollectionTagWorker
   end
 
   def invisible_char?(name)
-    (name =~ /^[\x21-\x7E]+(?:\s[\x21-\x7E]+)?$/).nil?
+    (name =~ /^[\x21-\x7E\u4E00-\u9FFF]+(?:\s[\x21-\x7E\u4E00-\u9FFF]+)?$/).nil?
   end
 
   def out_of_length?(name)
