@@ -31,7 +31,7 @@ class TokenCollectionTagWorker
   end
 
   def invalid_char?(name)
-    !name.ascii_only?
+    !name.ascii_only? && (name =~ /^[\u4E00-\u9FFF]+$/).nil?
   end
 
   def invisible_char?(name)
