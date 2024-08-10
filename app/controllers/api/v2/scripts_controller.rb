@@ -3,6 +3,8 @@ require "jbuilder"
 module Api
   module V2
     class ScriptsController < BaseController
+      MAX_RECORDS_COUNT = 5000
+
       before_action :set_page_and_page_size, except: :referring_capacities
       before_action :find_script, except: :referring_capacities
 
@@ -21,7 +23,7 @@ module Api
           if @contract.ckb_transactions_count.zero?
             CkbTransaction.none
           else
-            @contract.ckb_transactions.order(block_number: :desc).page(@page).per(@page_size)
+            @contract.ckb_transactions.order(block_number: :desc).limit(MAX_RECORDS_COUNT).page(@page).per(@page_size)
           end
       end
 
