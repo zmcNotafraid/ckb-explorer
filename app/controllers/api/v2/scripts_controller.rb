@@ -23,7 +23,7 @@ module Api
           if @contract.ckb_transactions_count.zero?
             CkbTransaction.none
           else
-            @contract.ckb_transactions.order(block_number: :desc).limit(MAX_RECORDS_COUNT).page(@page).per(@page_size).fast_page
+            @contract.ckb_transactions.order(block_number: :desc).page(@page).per(@page_size).fast_page
           end
       end
 

@@ -49,6 +49,16 @@ class MarketDataTest < ActiveSupport::TestCase
     assert_equal expected_circulating_supply, MarketData.new.send(:total_supply)
   end
 
+  test "total_supply should sub treasury amount when current timestamp after first release timestamp" do
+    MarketData.any_instance.stubs(:current_timestamp).returns(CkbUtils.time_in_milliseconds(Time.find_zone("UTC").parse("2020-06-03")))
+    latest_dao = Block.recent.pick(:dao)
+    parsed_dao = CkbUtils.parse_dao(latest_dao)
+    result = parsed_dao.c_i - (336 * 10**16 * 0.25).to_d - parsed_dao.s_i
+    expected_circulating_supply = result / 10**8
+
+    assert_equal expected_circulating_supply, MarketData.new.send(:total_supply)
+  end
+
   test "circulating_supply should return right value" do
     bug_bounty_address = create(:address, address_hash: "ckb1qyqy6mtud5sgctjwgg6gydd0ea05mr339lnslczzrc", balance: 10**8 * 1000)
     MarketData.any_instance.stubs(:current_timestamp).returns(CkbUtils.time_in_milliseconds(Time.find_zone("UTC").parse("2019-11-30")))
