@@ -7,8 +7,8 @@ namespace :migration do
                           open_timeout: 1, read_timeout: 3,
                           write_timeout: 1
                         })
-    first_tx = CkbTransaction.where(tx_index: nil).order("block_number asc").select(:block_number).first
-    last_tx = CkbTransaction.where(tx_index: nil).order("block_number desc").select(:block_number).first
+    first_tx = CkbTransaction.tx_committed.where(tx_index: nil).order("block_number asc").select(:block_number).first
+    last_tx = CkbTransaction.tx_committed.where(tx_index: nil).order("block_number desc").select(:block_number).first
 
     (first_tx.block_number..last_tx.block_number).to_a.each_slice(100).to_a.each do |range|
       fill_missed_tx_index(range, 0)
