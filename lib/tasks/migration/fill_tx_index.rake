@@ -31,7 +31,7 @@ namespace :migration do
         attrs << { tx_hash: tx[:hash], tx_status: "committed", tx_index: index }
       end
     end; nil
-    CkbTransaction.upsert_all(attrs)
+    CkbTransaction.upsert_all(attrs, unique_by: %i[tx_status tx_hash])
   rescue StandardError => _e
     retry_count += 1
     if retry_count > 2
