@@ -8,7 +8,7 @@ namespace :migration do
       group(:script_hash).
       having("COUNT(*) > 1").
       pluck(:script_hash)
-    duplicate_script_hashes.each_with_index do |hash, _index|
+    duplicate_script_hashes.each do |hash|
       LockScript.where(script_hash: hash).each do |script|
         unless CellOutput.live.where(lock_script_id: script.id).exists?
           script.destroy
@@ -16,7 +16,7 @@ namespace :migration do
       end
     end; nil
 
-    duplicate_script_hashes.each do |lock_script_hash|
+    duplicate_script_hashes.each_with_index do |lock_script_hash, index|
       p lock_script_hash
       p index
       lock_script_ids = LockScript.where(script_hash: lock_script_hash).order("id asc").pluck(:id)
@@ -33,7 +33,7 @@ namespace :migration do
       group(:script_hash).
       having("COUNT(*) > 1").
       pluck(:script_hash)
-    duplicate_script_hashes.each_with_index do |hash, _index|
+    duplicate_script_hashes.each do |hash|
       LockScript.where(script_hash: hash).each do |script|
         unless CellOutput.live.where(lock_script_id: script.id).exists?
           script.destroy
@@ -56,7 +56,7 @@ namespace :migration do
       end
     end; nil
 
-    duplicate_type_script_hashes.each do |type_script_hash|
+    duplicate_type_script_hashes.each_with_index do |type_script_hash, index|
       p type_script_hash
       p index
       type_script_ids = TypeScript.where(script_hash: type_script_hash).order("id asc").pluck(:id)
