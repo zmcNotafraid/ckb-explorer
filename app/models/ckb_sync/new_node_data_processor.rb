@@ -1392,6 +1392,7 @@ _prev_outputs, index = nil)
         epoch_info = CkbUtils.parse_epoch_info(header)
         cellbase = node_block.transactions.first
 
+        generate_address_in_advance(cellbase, header.timestamp)
         block_cell_consumed = CkbUtils.block_cell_consumed(node_block.transactions)
         total_cell_capacity = CkbUtils.total_cell_capacity(node_block.transactions)
         miner_hash = CkbUtils.miner_hash(cellbase)
@@ -1465,6 +1466,20 @@ _prev_outputs, index = nil)
       end
 
       hashes
+    end
+
+    def generate_address_in_advance(cellbase, block_timestamp)
+      return if cellbase.witnesses.blank?
+
+      lock_script = CkbUtils.generate_lock_script_from_cellbase(cellbase)
+      lock = LockScript.find_or_create_by(
+        code_hash: lock_script.code_hash,
+        hash_type: lock_script.hash_type,
+        args: lock_script.args,
+      )
+      local_cache.fetch("NodeData/Address/#{lock_script.code_hash}-#{lock_script.hash_type}-#{lock_script.args}") do
+        Address.find_or_create_address(lock_script, block_timestamp, lock.id)
+      end
     end
 
     def cell_type(type_script, output_data = nil)
