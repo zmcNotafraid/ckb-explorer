@@ -1355,7 +1355,7 @@ _prev_outputs, index = nil)
         is_cellbase: tx_index.zero?,
         live_cell_changes: live_cell_changes(tx, tx_index),
         bytes: tx.serialized_size_in_block,
-        tx_index: tx_index
+        tx_index:,
       }
     end
 
@@ -1476,6 +1476,7 @@ _prev_outputs, index = nil)
         code_hash: lock_script.code_hash,
         hash_type: lock_script.hash_type,
         args: lock_script.args,
+        script_hash: lock_script.compute_hash,
       )
       local_cache.fetch("NodeData/Address/#{lock_script.code_hash}-#{lock_script.hash_type}-#{lock_script.args}") do
         Address.find_or_create_address(lock_script, block_timestamp, lock.id)
