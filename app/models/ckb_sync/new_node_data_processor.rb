@@ -803,20 +803,20 @@ dao_address_ids, contained_udt_ids, contained_addr_ids
         end
         lock_script_ids = LockScript.upsert_all(lock_scripts_attributes, unique_by: :script_hash, returning: [:id])
 
-        lock_script_ids.each do |row|
-          lock_script_id = row["id"]
-          lock_script = LockScript.find lock_script_id
-          contract = Contract.find_by code_hash: lock_script.code_hash
-          temp_hash = { script_hash: lock_script&.script_hash, is_contract: false }
-          if contract
-            temp_hash = temp_hash.merge is_contract: true, contract_id: contract.id
-          else
-            contract = Contract.create code_hash: lock_script.script_hash
-            temp_hash = temp_hash.merge contract_id: contract.id
-          end
-          # script = Script.find_or_create_by temp_hash
-          # lock_script.update script_id: script.id
-        end
+        # lock_script_ids.each do |row|
+        #   lock_script_id = row["id"]
+        #   lock_script = LockScript.find lock_script_id
+        #   contract = Contract.find_by code_hash: lock_script.code_hash
+        #   temp_hash = { script_hash: lock_script&.script_hash, is_contract: false }
+        #   if contract
+        #     temp_hash = temp_hash.merge is_contract: true, contract_id: contract.id
+        #   else
+        #     contract = Contract.create code_hash: lock_script.script_hash
+        #     temp_hash = temp_hash.merge contract_id: contract.id
+        #   end
+        # script = Script.find_or_create_by temp_hash
+        # lock_script.update script_id: script.id
+        # end
       end
 
       if type_scripts_attributes.present?
@@ -824,20 +824,20 @@ dao_address_ids, contained_udt_ids, contained_addr_ids
           attr.merge!(created_at: Time.current, updated_at: Time.current)
         end
         type_script_ids = TypeScript.upsert_all(type_scripts_attributes, unique_by: :script_hash, returning: [:id])
-        type_script_ids.each do |row|
-          type_script_id = row["id"]
-          type_script = TypeScript.find(type_script_id)
-          temp_hash = { script_hash: type_script&.script_hash, is_contract: false }
-          contract = Contract.find_by code_hash: type_script.code_hash
-          if contract
-            temp_hash = temp_hash.merge is_contract: true, contract_id: contract.id
-          else
-            contract = Contract.create code_hash: type_script.script_hash
-            temp_hash = temp_hash.merge contract_id: contract.id
-          end
-          # script = Script.find_or_create_by temp_hash
-          # type_script.update script_id: script.id
-        end
+        # type_script_ids.each do |row|
+        #   type_script_id = row["id"]
+        #   type_script = TypeScript.find(type_script_id)
+        #   temp_hash = { script_hash: type_script&.script_hash, is_contract: false }
+        #   contract = Contract.find_by code_hash: type_script.code_hash
+        #   if contract
+        #     temp_hash = temp_hash.merge is_contract: true, contract_id: contract.id
+        #   else
+        #     contract = Contract.create code_hash: type_script.script_hash
+        #     temp_hash = temp_hash.merge contract_id: contract.id
+        #   end
+        # script = Script.find_or_create_by temp_hash
+        # type_script.update script_id: script.id
+        # end
       end
       build_addresses!(outputs, local_block)
       # prepare script ids for insert cell_outputs
